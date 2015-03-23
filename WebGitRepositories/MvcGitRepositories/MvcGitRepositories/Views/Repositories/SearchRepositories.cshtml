@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "Procurar Repositórios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    MvcGitRepositories.Models.RepositoryModel objModel = new MvcGitRepositories.Models.RepositoryModel();
+    MvcGitRepositories.Models.RepositoryItems data = new MvcGitRepositories.Models.RepositoryItems();
+    data.items = new List<MvcGitRepositories.Models.BasicRepository>();
+    String strWord = String.Empty;
+       
+    
+    if (Request["txtWord"] != null)
+    {
+    
+         strWord = Request["txtWord"];
+         data = objModel.GetRepositoriesbyWord(strWord);
+            
+    }
+
+}
+
+
+<h2>Procurar Repositórios</h2>
+<br />
+<form method="post">
+<input name="txtWord" value="@strWord" type="text" />
+<input name="btnSearch" type="submit" />
+    </form>
+<br />
+    
+    @foreach (MvcGitRepositories.Models.BasicRepository objRep in data.items){
+<table id="table_repositories" class="ui-widget">
+    <thead class="ui-widget-header">
+        
+    <tr>
+        <td>ID</td>
+        <td>@objRep.id</td>
+</tr>
+    <tr>
+        <td>NAME</td>
+        <td>@objRep.name</td>
+</tr>
+<tr>
+        <td>FULL NAME</td>
+        <td>@objRep.full_name</td>
+</tr>
+<tr>
+        <td>DESCRIPTION</td>
+        <td>@objRep.description</td>
+</tr>
+<tr>
+        <td>URL</td>
+        <td><a href="@objRep.html_url" target="_blank">@objRep.html_url</a></td>
+</tr>
+
+<tr>
+        <td>FAVORITE</td>
+        <td></td>
+</tr>
+    </table>
+    
+    
+    
+    }
+

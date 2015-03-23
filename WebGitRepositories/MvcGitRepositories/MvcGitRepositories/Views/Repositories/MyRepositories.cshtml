@@ -2,9 +2,32 @@
     ViewBag.Title = "Repositórios do Carlos Bastos";
     Layout = "~/Views/Shared/_Layout.cshtml";
     MvcGitRepositories.Models.RepositoryModel objModel = new MvcGitRepositories.Models.RepositoryModel();
-    String test = objModel.GetRepositoriesbyUser();
+    List<MvcGitRepositories.Models.BasicRepository> data = objModel.GetRepositoriesbyUser();
+    
 }
 
+
 <h2>Repositórios do Carlos Bastos</h2>
+<br />
+<table id="table_repositories" class="ui-widget">
+    <thead class="ui-widget-header">
+    <tr>
+        <td>Id</td>
+        <td>Name</td>
+        <td>Full Name</td>
+        <td>URL</td>
+    </tr>
+         <tbody class="ui-widget-content">
+    @foreach (MvcGitRepositories.Models.BasicRepository objRep in data){
+        
+    <tr>
+        <td>@objRep.id</td>
+        <td>@objRep.name</td>
+        <td>@objRep.full_name</td>
+        <td><a href="@objRep.html_url" target="_blank">@objRep.html_url</a></td>
+    </tr>
+    }
+
+</table>
 
 

@@ -56,6 +56,15 @@ namespace MvcGitRepositories.Controllers
             return View();
         }
 
+        public ActionResult SearchRepositories()
+        {
+
+            ViewBag.Message = "Repositórios do Carlos Bastos.";
+
+
+            return View();
+        }
+
         public String GetMyRepositories()
         {
 
@@ -68,12 +77,12 @@ namespace MvcGitRepositories.Controllers
             return strResponse;
         }
 
-        public String SearchRepositories(String strWord)
+        public String SearchRepositoriesByWord(String strWord)
         {
 
             
             // Attach Position to search to the URL
-            String strUrlWebService = String.Format(strURLSearchRepositories, strWord);
+            String strUrlWebService = String.Format(strURLSearchRepositories, strWord, "stars", "desc" );
             String strResponse = GET(strUrlWebService);
 
 

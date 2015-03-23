@@ -6,6 +6,9 @@
         <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
         <meta name="viewport" content="width=device-width" />
         @Styles.Render("~/Content/css")
+         @Styles.Render("~/Content/themes/base/css")
+
+        
         @Scripts.Render("~/bundles/modernizr")
     </head>
     <body>
@@ -23,8 +26,8 @@
                     
                     <nav>
                         <ul id="menu">
-                            <li>@Html.ActionLink("Meus repositórios", "Index", "Home")</li>
-                            <li>@Html.ActionLink("Procurar repositórios", "About", "Home")</li>
+                            <li>@Html.ActionLink("Meus repositórios", "MyRepositories", "Repositories")</li>
+                            <li>@Html.ActionLink("Procurar repositórios", "SearchRepositories", "Repositories")</li>
                             <li>@Html.ActionLink("Repositórios favoritos", "Contact", "Home")</li>
                         </ul>
                     </nav>

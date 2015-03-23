@@ -74,6 +74,5 @@ C:\Users\Exsis\Desktop\WAY2\WebGitRepositories\MvcGitRepositories\MvcGitReposito
 C:\Users\Exsis\Desktop\WAY2\WebGitRepositories\MvcGitRepositories\MvcGitRepositories\bin\ru\System.Spatial.resources.dll
 C:\Users\Exsis\Desktop\WAY2\WebGitRepositories\MvcGitRepositories\MvcGitRepositories\bin\zh-Hans\System.Spatial.resources.dll
 C:\Users\Exsis\Desktop\WAY2\WebGitRepositories\MvcGitRepositories\MvcGitRepositories\bin\zh-Hant\System.Spatial.resources.dll
-C:\Users\Exsis\Desktop\WAY2\WebGitRepositories\MvcGitRepositories\MvcGitRepositories\obj\Debug\MvcGitRepositories.csprojResolveAssemblyReference.cache
 C:\Users\Exsis\Desktop\WAY2\WebGitRepositories\MvcGitRepositories\MvcGitRepositories\obj\Debug\MvcGitRepositories.dll
 C:\Users\Exsis\Desktop\WAY2\WebGitRepositories\MvcGitRepositories\MvcGitRepositories\obj\Debug\MvcGitRepositories.pdb
