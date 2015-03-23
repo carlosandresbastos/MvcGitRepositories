@@ -54,7 +54,49 @@ namespace MvcGitRepositories.Models
             set { _description = value; }
         }
 
+        String _language;
 
+        public String language
+        {
+            get { return _language; }
+            set { _language = value; }
+        }
+
+        String _updated_at;
+
+        public String updated_at
+        {
+            get { return _updated_at; }
+            set { _updated_at = value; }
+        }
+
+        OwnerInformation _owner;
+
+        public OwnerInformation owner
+        {
+            get { return _owner; }
+            set { _owner = value; }
+        }
+
+
+    }
+
+    public class OwnerInformation
+    {
+        String _login;
+
+        public String login
+        {
+            get { return _login; }
+            set { _login = value; }
+        }
+        String _avatar_url;
+
+        public String avatar_url
+        {
+            get { return _avatar_url; }
+            set { _avatar_url = value; }
+        }
     }
 
 

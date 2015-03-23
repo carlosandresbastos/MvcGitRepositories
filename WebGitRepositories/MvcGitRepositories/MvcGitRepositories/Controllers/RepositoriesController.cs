@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using MvcGitRepositories.Models;
 
 namespace MvcGitRepositories.Controllers
 {
@@ -90,8 +91,6 @@ namespace MvcGitRepositories.Controllers
         }
 
 
-
-
         // Returns JSON string
         string GET(string url)
         {
@@ -105,6 +104,33 @@ namespace MvcGitRepositories.Controllers
             }
             return s;
         }
+
+        public void SaveFavorites(String idFavorite)
+        {
+            RepositoryFavorite objRepFav = new RepositoryFavorite();
+
+            String strPath = String.Concat(System.Web.HttpContext.Current.Server.MapPath("/"), "favorites.xml");
+
+            objRepFav.IdRepository = idFavorite;
+
+
+            FavoriteRepositories objFav = new FavoriteRepositories();
+            objFav.Repositories = new List<RepositoryFavorite>();
+            objFav.Repositories.Add(objRepFav);
+
+
+            System.Xml.Serialization.XmlSerializer writer =
+                new System.Xml.Serialization.XmlSerializer(typeof(FavoriteRepositories));
+
+            System.IO.StreamWriter file = new System.IO.StreamWriter(
+                strPath);
+            writer.Serialize(file, objFav);
+            file.Close();
+            SearchRepositories();
+        }
+
+
+ 
 
     }
 }

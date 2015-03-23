@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Json;
 using System.IO;
 using System.Web.Script.Serialization;
 
+
 namespace MvcGitRepositories.Models
 {
     public class RepositoryModel
@@ -32,6 +33,7 @@ namespace MvcGitRepositories.Models
 
             return objRepository;
         }
+
  
     }
 }
