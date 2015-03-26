@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using MvcGitRepositories.Models;
+using System.Xml.Serialization;
+using System.Web.Script.Serialization;
 
 namespace MvcGitRepositories.Controllers
 {
@@ -19,8 +21,20 @@ namespace MvcGitRepositories.Controllers
         //
         // GET: /MyRepositories/
 
+        /// <summary>
+        /// URL For GET repositories by User
+        /// </summary>
         String strURLGetRepositoriesByUser;
+
+        /// <summary>
+        /// URL for Search repositories
+        /// </summary>
         String strURLSearchRepositories;
+
+        /// <summary>
+        /// Path of XML File to save favorites
+        /// </summary>
+        String strPath;
 
         String _strMessage;
 
@@ -40,7 +54,7 @@ namespace MvcGitRepositories.Controllers
         {
             strURLGetRepositoriesByUser = " https://api.github.com/users/{0}/repos";
             strURLSearchRepositories = "https://api.github.com/search/repositories?q={0}&sort={1}&order={2}";
-
+            strPath = String.Concat(System.Web.HttpContext.Current.Server.MapPath("/"), "favorites.xml");
         }
 
         public ActionResult Index()
@@ -48,11 +62,24 @@ namespace MvcGitRepositories.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Method for View - Repository
+        /// </summary>
+        /// <returns>View of my repositories</returns>
         public ActionResult MyRepositories()
         {
             
             ViewBag.Message = "Repositórios do Carlos Bastos.";
             
+
+            return View();
+        }
+
+        public ActionResult FavoritesRepositories()
+        {
+
+            ViewBag.Message = "Repositórios Favoritos";
+
 
             return View();
         }
@@ -66,6 +93,8 @@ namespace MvcGitRepositories.Controllers
             return View();
         }
 
+
+        // Get Repositories of Carlos Bastos
         public String GetMyRepositories()
         {
 
@@ -78,6 +107,12 @@ namespace MvcGitRepositories.Controllers
             return strResponse;
         }
 
+
+        /// <summary>
+        /// Search repositories that match with any word
+        /// </summary>
+        /// <param name="strWord">Word for search</param>
+        /// <returns>Returns a string with the JSON from Web Service</returns>
         public String SearchRepositoriesByWord(String strWord)
         {
 
@@ -91,7 +126,12 @@ namespace MvcGitRepositories.Controllers
         }
 
 
-        // Returns JSON string
+        
+        /// <summary>
+        /// Method to connect to a Web API and get JSON Data in String format
+        /// </summary>
+        /// <param name="url">URL of the method of the web API</param>
+        /// <returns>JSON data from web service</returns>
         string GET(string url)
         {
             string s;
@@ -105,29 +145,88 @@ namespace MvcGitRepositories.Controllers
             return s;
         }
 
-        public void SaveFavorites(String idFavorite)
+
+        /// <summary>
+        /// Web method to Save a Favorite
+        /// </summary>
+        /// <param name="idFavorite">Code of the favorite</param>
+        /// <param name="favUrl">URL to get data from favorite</param>
+        /// <returns></returns>
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult SaveFavorites(String idFavorite, String favUrl)
         {
             RepositoryFavorite objRepFav = new RepositoryFavorite();
 
-            String strPath = String.Concat(System.Web.HttpContext.Current.Server.MapPath("/"), "favorites.xml");
+            
 
             objRepFav.IdRepository = idFavorite;
+            objRepFav.Url = favUrl;
 
 
             FavoriteRepositories objFav = new FavoriteRepositories();
-            objFav.Repositories = new List<RepositoryFavorite>();
+            objFav = DeserializeXML(strPath);
             objFav.Repositories.Add(objRepFav);
 
 
-            System.Xml.Serialization.XmlSerializer writer =
-                new System.Xml.Serialization.XmlSerializer(typeof(FavoriteRepositories));
-
-            System.IO.StreamWriter file = new System.IO.StreamWriter(
-                strPath);
+            XmlSerializer writer =  new XmlSerializer(typeof(FavoriteRepositories));
+            StreamWriter file = new System.IO.StreamWriter(strPath);
             writer.Serialize(file, objFav);
             file.Close();
-            SearchRepositories();
+
+            return Json(objFav);
         }
+
+        public List<BasicRepository> GetFavorites() {
+            List<BasicRepository> objRepos = new List<BasicRepository>();
+            FavoriteRepositories objFavorites = this.DeserializeXML(strPath);
+            foreach(RepositoryFavorite objFavorite in objFavorites.Repositories)
+            {
+                String strResponse = this.GET(objFavorite.Url);
+                BasicRepository objRepository = new JavaScriptSerializer().Deserialize<BasicRepository>(strResponse);
+                objRepos.Add(objRepository);
+            }
+
+            return objRepos;
+        }
+
+         [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult GetContributors(String url)
+        {
+            List<Contributor> objContributors = new List<Contributor>();
+            String strResponse = this.GET(url);
+            objContributors = new JavaScriptSerializer().Deserialize<List<Contributor>>(strResponse);
+
+            return Json(objContributors);
+        }
+
+        public FavoriteRepositories DeserializeXML(String strPathXML)
+        {
+            FileInfo objFile = new FileInfo(strPathXML);
+            FavoriteRepositories objFav = new FavoriteRepositories();
+
+            if (objFile.Exists)
+            {
+                XmlSerializer objDeserializer = new XmlSerializer(typeof(FavoriteRepositories));
+                StreamReader strReadfile = new System.IO.StreamReader(strPathXML);
+                var obj = objDeserializer.Deserialize(strReadfile);
+                strReadfile.Close();
+
+                objFav = (FavoriteRepositories)obj;
+                
+
+            }
+            else {
+                //If file don't exists, create a new one
+                objFav.Repositories = new List<RepositoryFavorite>();
+            
+            }
+           
+                return objFav;    
+            
+
+
+        }
+
 
 
  

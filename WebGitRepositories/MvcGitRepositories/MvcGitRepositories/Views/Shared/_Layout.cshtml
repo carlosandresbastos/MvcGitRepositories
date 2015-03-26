@@ -10,6 +10,9 @@
 
         
         @Scripts.Render("~/bundles/modernizr")
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/jqueryui")
+        @RenderSection("scripts", required: false)
     </head>
     <body>
         <header>
@@ -28,7 +31,7 @@
                         <ul id="menu">
                             <li>@Html.ActionLink("Meus repositórios", "MyRepositories", "Repositories")</li>
                             <li>@Html.ActionLink("Procurar repositórios", "SearchRepositories", "Repositories")</li>
-                            <li>@Html.ActionLink("Repositórios favoritos", "Contact", "Home")</li>
+                            <li>@Html.ActionLink("Repositórios favoritos", "FavoritesRepositories", "Repositories")</li>
                         </ul>
                     </nav>
                 </div>
@@ -48,8 +51,6 @@
             </div>
         </footer>
 
-        @Scripts.Render("~/bundles/jquery")
-        @Scripts.Render("~/bundles/jqueryui")
-        @RenderSection("scripts", required: false)
+
     </body>
 </html>

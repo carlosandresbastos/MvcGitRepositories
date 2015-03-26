@@ -6,7 +6,7 @@
     data.items = new List<MvcGitRepositories.Models.BasicRepository>();
     String strWord = String.Empty;
  
-    
+       
     
     if (Request["txtWord"] != null)
     {
@@ -17,7 +17,122 @@
     }
 
 }
+<link href="~/Scripts/datatable/css/jquery.dataTables.css" rel="stylesheet" />
+<script src="~/Scripts/datatable/js/jquery.dataTables.js"></script>
 
+  <script>
+      $(function () {
+
+          dialog = $("#dialog-message").dialog({
+              modal: true,
+              autoOpen: false
+          });
+
+          dialogver = $("#dialog-verinfo").dialog({
+              modal: true,
+              autoOpen: false,
+              width: 700,
+              buttons: [
+                {
+                    text: "Ok",
+                    icons: {
+                        primary: "ui-icon-circle-check"
+                    },
+                    click: function() {
+                        $( this ).dialog( "close" );
+                    }
+                }
+              ]
+          });
+
+          
+          var icons = {
+              header: "ui-icon-circle-arrow-e",
+              activeHeader: "ui-icon-circle-arrow-s"
+          };
+          $("#accordion").accordion({
+              icons: icons
+          });
+          $("#toggle").button().click(function () {
+              if ($("#accordion").accordion("option", "icons")) {
+                  $("#accordion").accordion("option", "icons", null);
+              } else {
+                  $("#accordion").accordion("option", "icons", icons);
+              }
+          });
+
+      });
+
+      function AddtoFavorites(idFav, favUrl) {
+
+          var strData = "{ idFavorite: '" + idFav + "', favUrl:'" + favUrl + "' }"
+
+          $.ajax({
+              url: '/Repositories/SaveFavorites',
+              type: 'POST',
+              dataType: 'json',
+              data: strData,
+              contentType: 'application/json',
+              success: function (data) {
+                  $("#dialog-message").dialog("open");
+                 $('#dmessage').text('Repositório foi adicionado com êxito aos favoritos.') ;
+              },
+              error: function () {
+                  $("#dialog-message").dialog("open");
+                  $('#dmessage').text('Ocorreu um erro ao tentar adicionar aos favoritos. Por favor, tente novamente.');
+              }
+          });
+      }
+
+      function ViewRep(name,description,language,updated_at,login,avatar_url, contributors_url)
+      {
+          $("#dialog-verinfo").dialog("open");
+          $('#name').text(name);
+          $('#description').text(description);
+          $('#language').text(language);
+          $('#updateddate').text(updated_at);
+          $('#loginname').text(login);
+
+          var strData = "{ url: '" + contributors_url + "' }"
+
+          $.ajax({
+              url: '/Repositories/GetContributors',
+              type: 'POST',
+              dataType: 'json',
+              data: strData,
+              contentType: 'application/json',
+              success: function (data) {
+                  
+                  if (data) {
+                      var len = data.length;
+                      
+                      var txt = "";
+                      $("#tablecontributors").append("<tbody>");
+                      if (len > 0) {
+                          for (var i = 0; i < len; i++) {
+                              txt += "<tr><td> <img src='" + data[i].avatar_url + "' height='32' width='32' /> </td><td>" + data[i].login + "</td><td><a href='" + data[i].html_url + "' target='_blank'>" + data[i].html_url + "</a></td><td>" + data[i].contributions + "</td></tr>";
+                          }
+                          if (txt != "") {
+                              $("#tablecontributors").append(txt);
+                          }
+                      }
+                      $("#tablecontributors").append("</tbody>");
+                  }
+              },
+              error: function () {
+                  alert("Erro!");
+              }
+          });
+
+      }
+
+      $(document).ready(function() {
+          $('#example').dataTable();
+
+
+
+      } );
+  </script>
 
 
 
@@ -29,45 +144,98 @@
     </form>
 <br />
     
-    @foreach (MvcGitRepositories.Models.BasicRepository objRep in data.items){
-<table id="table_repositories" class="ui-widget">
-    <thead class="ui-widget-header">
-        
-    <tr>
-        <td>ID</td>
-        <td>@objRep.id</td>
-</tr>
-    <tr>
-        <td>NAME</td>
-        <td><a href="javascript:abrir();">@objRep.name</a></td>
-</tr>
-<tr>
-        <td>FULL NAME</td>
-        <td>@objRep.full_name</td>
-</tr>
-<tr>
-        <td>DESCRIPTION</td>
-        <td>@objRep.description</td>
-</tr>
-<tr>
-        <td>URL</td>
-        <td><a href="@objRep.html_url" target="_blank">@objRep.html_url</a></td>
-</tr>
-        
-<tr>
-        <td>FAVORITE</td>
-        <td>
-            <a href='@Url.Action("SaveFavorites", "Repositories", new RouteValueDictionary(new { idFavorite =  objRep.id }))'>
-            <img src="@Url.Content("~/Images/favorites-icon1.png")" alt="add as favorite" />
-             </a>
-                </td>
-            
-</tr>
+
+@if (Request["txtWord"] != null)
+    {
+    
+    
+    
+<table id="example" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Avatar</th>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>URL</th>
+                <th>Adicionar aos favoritos</th>
+            </tr>
+        </thead>
+ 
+
+ 
+        <tbody>
+@foreach (MvcGitRepositories.Models.BasicRepository objRep in data.items)
+{
+            <tr>
+                <td>@objRep.id</td>
+                <td><img src="@objRep.owner.avatar_url" height="32" width="32" /></td>
+                <td><a href="javascript:ViewRep('@objRep.name','@objRep.description','@objRep.language','@objRep.updated_at','@objRep.owner.login','@objRep.owner.avatar_url', '@objRep.contributors_url')">@objRep.name</a></td>
+                <td>@objRep.description</td>
+                <td><a href="@objRep.url" target="_blank">@objRep.url</a></td>
+                <td><a href="javascript:AddtoFavorites('@objRep.id','@objRep.url')">Adicionar</a></td>
+            </tr>
+}           
+        </tbody>
     </table>
-    
-    
-    
-    }
+   
+}   
 
 
+
+
+
+<div id="dialog-message" title="Adicionar aos Favoritos">
+  <p id="dmessage"></p>
+</div>
+
+
+<div id="dialog-verinfo"  title="Informações do Repositório">
+
+        <table id="users" class="ui-widget ui-widget-content">
+    <tbody>
+      <tr>
+        <td><strong>Nome:</strong></td>
+        <td id="name"></td>
+
+      </tr>
+       <tr>
+        <td><strong>Descrição:</strong></td>
+        <td id="description"></td>
+
+      </tr>
+       <tr>
+        <td><strong>Linguagem:</strong></td>
+        <td id="language"></td>
+
+      </tr>
+       <tr>
+        <td><strong>Ultima data de atualização:</strong></td>
+        <td id="updateddate"></td>
+
+      </tr>
+       <tr>
+        <td><strong>Dono do repositório:</strong></td>
+        <td id="loginname"></td>
+
+      </tr>
+    </tbody>
+  </table>
+    Contributors:
+
+      <table id="tablecontributors" class="ui-widget ui-widget-content">
+    <thead>
+      <tr class="ui-widget-header ">
+          <th>Avatar</th>
+        <th>Login</th>
+        <th>Url</th>
+        <th>Contribuições</th>
+      </tr>
+    </thead>
+
+  </table>
+
+
+
+</div>    
 

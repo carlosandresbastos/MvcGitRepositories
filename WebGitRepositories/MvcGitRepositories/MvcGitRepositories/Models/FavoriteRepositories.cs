@@ -24,6 +24,16 @@ namespace MvcGitRepositories.Models
             get { return _IdRepository; }
             set { _IdRepository = value; }
         }
+
+        String _Url;
+
+        public String Url
+        {
+            get { return _Url; }
+            set { _Url = value; }
+        }
+
+
     }
 
 

@@ -34,6 +34,12 @@ namespace MvcGitRepositories.Models
             return objRepository;
         }
 
+        public List<BasicRepository> GetFavoritesRepositories()
+        {
+            RepositoriesController objRep = new RepositoriesController();
+            return objRep.GetFavorites();
+
+        }
  
     }
 }

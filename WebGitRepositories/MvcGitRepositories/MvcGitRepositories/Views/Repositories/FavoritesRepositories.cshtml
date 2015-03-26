@@ -1,0 +1,40 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    MvcGitRepositories.Models.RepositoryModel objModel = new MvcGitRepositories.Models.RepositoryModel();
+    List<MvcGitRepositories.Models.BasicRepository> data = objModel.GetFavoritesRepositories();
+    
+}
+
+  <script>
+      $(function () {
+          var icons = {
+              header: "ui-icon-circle-arrow-e",
+              activeHeader: "ui-icon-circle-arrow-s"
+          };
+          $("#accordion").accordion({
+              icons: icons
+          });
+          $("#toggle").button().click(function () {
+              if ($("#accordion").accordion("option", "icons")) {
+                  $("#accordion").accordion("option", "icons", null);
+              } else {
+                  $("#accordion").accordion("option", "icons", icons);
+              }
+          });
+      });
+  </script>
+
+<!DOCTYPE html>
+
+<h2>Repositórios Favoritos</h2>
+<div id="accordion">
+        @foreach (MvcGitRepositories.Models.BasicRepository objRep in data){
+	<h3>@objRep.name</h3>
+	<div>
+        <img src="@objRep.owner.avatar_url" width="64" height="64" />
+    
+        <strong>Descripción:</strong> @objRep.description <br />
+	<strong>Lenguaje:</strong> @objRep.language</div>
+	
+        }
+</div>

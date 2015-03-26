@@ -6,7 +6,18 @@ using System.Web;
 namespace MvcGitRepositories.Models
 {
     public class RepositoryItems
+    
     {
+
+        int _total_count;
+
+        public int total_count
+        {
+            get { return _total_count; }
+            set { _total_count = value; }
+        }
+
+
         List<BasicRepository> _items;
 
         public List<BasicRepository> items
@@ -47,6 +58,32 @@ namespace MvcGitRepositories.Models
             set { _html_url = value; }
         }
 
+        String _url;
+
+        public String url
+        {
+            get { return _url; }
+            set { _url = value; }
+        }
+
+        String _collaborators_url;
+
+        public String collaborators_url
+        {
+            get { return _collaborators_url; }
+            set { _collaborators_url = value; }
+        }
+
+        String _contributors_url;
+
+        public String contributors_url
+        {
+            get { return _contributors_url; }
+            set { _contributors_url = value; }
+        }
+
+
+        
         String _description;
         public String description
         {

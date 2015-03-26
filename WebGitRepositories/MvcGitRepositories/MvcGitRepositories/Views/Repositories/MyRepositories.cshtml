@@ -3,31 +3,47 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     MvcGitRepositories.Models.RepositoryModel objModel = new MvcGitRepositories.Models.RepositoryModel();
     List<MvcGitRepositories.Models.BasicRepository> data = objModel.GetRepositoriesbyUser();
+    int i = 1;
     
 }
-
+  <script>
+  $(function() {
+    $( "#tabs" ).tabs({
+      collapsible: true
+    });
+  });
+  </script>
 
 <h2>Repositórios do Carlos Bastos</h2>
 <br />
-<table id="table_repositories" class="ui-widget">
-    <thead class="ui-widget-header">
-    <tr>
-        <td>Id</td>
-        <td>Name</td>
-        <td>Full Name</td>
-        <td>URL</td>
-    </tr>
-         <tbody class="ui-widget-content">
+        <div id="tabs">
+              <ul>
     @foreach (MvcGitRepositories.Models.BasicRepository objRep in data){
+
+
+    <li><a href="#tabs-@i">@objRep.name</a> @{i++;}</li>
+      
+
+           
+  }
+                    </ul>
+
+@{i= 1;}
+
+    @foreach (MvcGitRepositories.Models.BasicRepository objRepBas in data){
+
+            <div id="tabs-@i">
+    <img src="@objRepBas.owner.avatar_url" width="32" height="32" />
+    <p><strong>ID:</strong>@objRepBas.id</p>
+    <p><strong>Descrição</strong>@objRepBas.description</p>
+     <p><strong>Linguagem</strong>@objRepBas.language</p>
+<p><strong>URL</strong><a href="@objRepBas.html_url" target="_blank">@objRepBas.html_url</a></p>
+
+              @{i++;}
+  </div>
         
-    <tr>
-        <td>@objRep.id</td>
-        <td>@objRep.name</td>
-        <td>@objRep.full_name</td>
-        <td><a href="@objRep.html_url" target="_blank">@objRep.html_url</a></td>
-    </tr>
     }
-
-</table>
-
+</div>
+        
+         
 
