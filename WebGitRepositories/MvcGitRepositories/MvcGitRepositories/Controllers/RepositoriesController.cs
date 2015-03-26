@@ -54,8 +54,19 @@ namespace MvcGitRepositories.Controllers
         {
             strURLGetRepositoriesByUser = " https://api.github.com/users/{0}/repos";
             strURLSearchRepositories = "https://api.github.com/search/repositories?q={0}&sort={1}&order={2}";
-            strPath = String.Concat(System.Web.HttpContext.Current.Server.MapPath("/"), "favorites.xml");
-        }
+            if (System.Web.HttpContext.Current == null)
+            {
+                strPath = @"c:\Temp";
+                if (Directory.Exists(strPath) == false)
+                {
+                    Directory.CreateDirectory(strPath);
+                }
+            }
+            else
+            {
+                strPath = String.Concat(System.Web.HttpContext.Current.Server.MapPath("/"), "favorites.xml");
+            }
+            }
 
         public ActionResult Index()
         {
